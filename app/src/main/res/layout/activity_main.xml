@@ -42,7 +42,7 @@
 
     <!-- TextInputLayout for ID -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutID"
+        android:id="@+id/textInputLayoutNombreProducto"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
@@ -65,7 +65,7 @@
         android:id="@+id/textInputLayoutProductName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayoutID"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayoutNombreProducto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
