@@ -3,7 +3,6 @@ package com.example.tp4_grupo_7;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Vinculación de los elementos del layout con variables Java
-        editTextID = findViewById(R.id.editTextID);
+        editTextID = findViewById(R.id.etNombre);
         editTextProductName = findViewById(R.id.editTextProductName);
         editTextStock = findViewById(R.id.editTextStock);
         spinnerCategory = findViewById(R.id.spinnerCategory);

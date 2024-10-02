@@ -5,4 +5,5 @@
     <string name="nombre_producto">NOMBRE PRODUCTO</string>
     <string name="stock">STOCK</string>
     <string name="categoria">CATEGORIA</string>
+    <string name="alta">ALTA</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.example.tp4_grupo_7;
 
 import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,7 +11,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity2 extends AppCompatActivity {
-
+    private EditText etID;
+    private EditText etNombre;
+    private EditText etStock;
+    private Spinner spCategoria;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,5 +25,14 @@ public class MainActivity2 extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        initVars();
+    }
+
+    public void initVars (){
+        etID = findViewById(R.id.etID);
+        etNombre = findViewById(R.id.etNombre);
+        etStock = findViewById(R.id.etStock);
+        spCategoria = findViewById(R.id.spCategoria);
     }
 }

@@ -12,6 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="@android:color/holo_red_light"
@@ -23,7 +24,7 @@
             android:id="@+id/tabAlta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ALTA" />
+            android:text="@string/alta" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabModificacion"
@@ -56,17 +57,18 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/tvId"
                 android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:width="2dp"
                 android:text="@string/ID" />
 
             <EditText
-                android:id="@+id/editTextText3"
+                android:id="@+id/etID"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:ems="10"
+                android:hint="@string/ID"
                 android:inputType="text" />
 
         </TableRow>
@@ -86,7 +88,7 @@
     </TableLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutNombreProducto"
+        android:id="@+id/tilNombreArticulo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
@@ -97,7 +99,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tableLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextID"
+            android:id="@+id/etNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/nombre_producto"
@@ -105,38 +107,40 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout2"
+        android:id="@+id/tilStock"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:hint="@string/stock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutNombreProducto">
+        app:layout_constraintTop_toBottomOf="@+id/tilNombreArticulo">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etStock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilSpinner"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:hint="@string/categoria"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
+        app:layout_constraintTop_toBottomOf="@+id/tilStock">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/tvCat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/categoria" />
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/spCategoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
