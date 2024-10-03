@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.concurrent.ExecutorService;
+
 public class MainActivity extends AppCompatActivity {
 
     // Declaración de variables para los elementos UI
@@ -31,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         editTextStock = findViewById(R.id.editTextStock);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         buttonAdd = findViewById(R.id.buttonAdd);
+        DataCategoria data= new DataCategoria(spinnerCategory,this);
+
+
 
         // Acción al hacer clic en el botón "Agregar"
         buttonAdd.setOnClickListener(new View.OnClickListener() {
