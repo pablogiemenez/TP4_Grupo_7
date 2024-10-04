@@ -3,9 +3,11 @@ package com.example.tp4_grupo_7;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -22,6 +24,9 @@ public class DataMainActivity extends AsyncTask<String, Void, String> {
     public DataMainActivity(ListView lvArticulos, Context context) {
         this.lvArticulos = lvArticulos;
         this.context = context;
+    }
+    public DataMainActivity(Context context){
+        this.context=context;
     }
 
     ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -50,6 +55,36 @@ public class DataMainActivity extends AsyncTask<String, Void, String> {
             });
         });
         return executor;
+    }
+    public void InsertArticle(int id, String nombre,int stock,String descripcionCategoria){
+
+        executor.execute(()->{
+
+            try{
+                DataCategoria data=new DataCategoria();
+                int idCategoria=data.ObtenerIdCategoria(descripcionCategoria);
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                PreparedStatement pst = con.prepareStatement("insert into articulo(id,nombre,stock,idCategoria) values (?,?,?,?)");
+                pst.setInt(1,id);
+                pst.setString(2,nombre);
+                pst.setInt(3,stock);
+                pst.setInt(4,idCategoria);
+
+                int filasModificadas= pst.executeUpdate();
+                if(filasModificadas>0){
+
+                    System.out.println("Articulo guardado con exito");
+                }
+                pst.close();
+                con.close();
+            }catch(Exception e){
+                e.printStackTrace();
+
+                System.out.println("Error al gurdar articulo");
+            }
+
+        });
     }
 
 

@@ -7,11 +7,14 @@ import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class DataCategoria extends AsyncTask<String, Void, String> {
     private Spinner sp_categoria;
@@ -20,6 +23,9 @@ public class DataCategoria extends AsyncTask<String, Void, String> {
     public DataCategoria(Spinner sp_categoria,Context context){
         this.sp_categoria=sp_categoria;
         this.context=context;
+    }
+    public DataCategoria(){
+
     }
     ExecutorService executor = Executors.newSingleThreadExecutor();
     public void getExecutor() {
@@ -52,6 +58,42 @@ public class DataCategoria extends AsyncTask<String, Void, String> {
             });
         });
 
+    }
+    public int ObtenerIdCategoria(String descripcion){
+        int idCategoria;
+        Future<Integer> futureId=executor.submit(() -> {
+
+            int idResult=-1;
+            try{
+
+
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                PreparedStatement pst = con.prepareStatement("SELECT id FROM categoria where descripcion=?");
+                pst.setString(1, descripcion);
+                ResultSet rs= pst.executeQuery();
+                System.out.println("conexion completa");
+                if(rs.next()){
+                    idResult=rs.getInt("id");
+
+                }
+                rs.close();
+                pst.close();
+                con.close();
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return idResult;
+    });
+        try {
+            idCategoria=futureId.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return idCategoria;
     }
 
     @Override

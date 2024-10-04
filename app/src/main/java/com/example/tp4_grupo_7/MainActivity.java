@@ -52,11 +52,18 @@ public class MainActivity extends AppCompatActivity {
 
                 // Validar que los campos no estén vacíos
                 if (id.isEmpty() || productName.isEmpty() || stock.isEmpty()) {
+
                     Toast.makeText(MainActivity.this, "Por favor, completa todos los campos.", Toast.LENGTH_SHORT).show();
                 } else {
                     // Aquí puedes añadir la lógica para manejar el registro del producto
-                    Toast.makeText(MainActivity.this, "Producto agregado: " + productName, Toast.LENGTH_SHORT).show();
+                    DataMainActivity data= new DataMainActivity(MainActivity.this);
+                    data.InsertArticle(Integer.parseInt(id),productName,Integer.parseInt(stock),category);
+                    Toast.makeText(MainActivity.this, "Producto agregado: " + productName+", "+id+ ", "+category+", "+stock, Toast.LENGTH_SHORT).show();
                 }
+                editTextID.setText("");
+                editTextStock.setText("");
+                editTextProductName.setText("");
+                spinnerCategory.setSelection(0);
             }
         });
     }
