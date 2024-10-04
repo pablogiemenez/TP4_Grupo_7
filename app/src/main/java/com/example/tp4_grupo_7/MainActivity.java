@@ -1,5 +1,6 @@
 package com.example.tp4_grupo_7;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.tabs.TabItem;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.concurrent.ExecutorService;
@@ -33,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
         editTextStock = findViewById(R.id.editTextStock);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         buttonAdd = findViewById(R.id.buttonAdd);
-        DataCategoria data= new DataCategoria(spinnerCategory,this);
 
+        DataCategoria data= new DataCategoria(spinnerCategory,this);
+        data.getExecutor();
 
 
         // Acción al hacer clic en el botón "Agregar"

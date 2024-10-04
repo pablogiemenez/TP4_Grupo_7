@@ -29,7 +29,7 @@ public class DataMainActivity extends AsyncTask<String, Void, String> {
         executor.execute(() -> {
             try{
                 Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection("sql10.freesqldatabase.com", "sql10734808", "aWgDljDA2v");
+                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("Select * FROM articulo");
 
