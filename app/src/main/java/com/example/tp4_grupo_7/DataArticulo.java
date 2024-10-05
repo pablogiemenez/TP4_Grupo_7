@@ -3,7 +3,6 @@ package com.example.tp4_grupo_7;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,18 +13,18 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class DataMainActivity extends AsyncTask<String, Void, String> {
+public class DataArticulo extends AsyncTask<String, Void, String> {
     private ListView lvArticulos;
     private Context context;
 
     private static String result2;
     private static ArrayList<Articulo> listaArticulos = new ArrayList<Articulo>();
 
-    public DataMainActivity(ListView lvArticulos, Context context) {
+    public DataArticulo(ListView lvArticulos, Context context) {
         this.lvArticulos = lvArticulos;
         this.context = context;
     }
-    public DataMainActivity(Context context){
+    public DataArticulo(Context context){
         this.context=context;
     }
 

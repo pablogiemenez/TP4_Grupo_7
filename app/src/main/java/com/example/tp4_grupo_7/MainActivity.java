@@ -1,6 +1,5 @@
 package com.example.tp4_grupo_7;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,10 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.tabs.TabItem;
 import com.google.android.material.textfield.TextInputEditText;
-
-import java.util.concurrent.ExecutorService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Por favor, completa todos los campos.", Toast.LENGTH_SHORT).show();
                 } else {
                     // Aquí puedes añadir la lógica para manejar el registro del producto
-                    DataMainActivity data= new DataMainActivity(MainActivity.this);
+                    DataArticulo data= new DataArticulo(MainActivity.this);
                     data.InsertArticle(Integer.parseInt(id),productName,Integer.parseInt(stock),category);
                     Toast.makeText(MainActivity.this, "Producto agregado: " + productName+", "+id+ ", "+category+", "+stock, Toast.LENGTH_SHORT).show();
                 }
