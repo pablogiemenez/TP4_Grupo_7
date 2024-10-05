@@ -70,22 +70,78 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                 pst.setInt(3,stock);
                 pst.setInt(4,idCategoria);
 
-                int filasModificadas= pst.executeUpdate();
-                if(filasModificadas>0){
-
-                    System.out.println("Articulo guardado con exito");
-                }
                 pst.close();
                 con.close();
             }catch(Exception e){
                 e.printStackTrace();
-
-                System.out.println("Error al gurdar articulo");
             }
 
         });
     }
+    public void buscarArticulo(int id, OnArticuloFoundListener listener) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                PreparedStatement pst = con.prepareStatement("SELECT * FROM articulo WHERE id = ?");
+                pst.setInt(1, id);
+                ResultSet rs = pst.executeQuery();
 
+                Articulo articulo = null;
+                if (rs.next()) {
+                    articulo = new Articulo();
+                    articulo.setId(rs.getInt("id"));
+                    articulo.setNombre(rs.getString("nombre"));
+                    articulo.setStock(rs.getInt("stock"));
+                    articulo.setIdCat(rs.getInt("idCategoria"));
+                }
+
+                rs.close();
+                pst.close();
+                con.close();
+
+                // Notificar el resultado en el hilo principal
+                final Articulo finalArticulo = articulo;
+                new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
+                    if (finalArticulo != null) {
+                        listener.onArticuloFound(finalArticulo);
+                    } else {
+                        listener.onArticuloNotFound();
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public interface OnArticuloFoundListener {
+        void onArticuloFound(Articulo articulo);
+        void onArticuloNotFound();
+    }
+
+    public void modificarArticulo(int id, String nombre, int stock, String descripcionCategoria) {
+        executor.execute(() -> {
+            try {
+                DataCategoria data = new DataCategoria();
+                int idCategoria = data.ObtenerIdCategoria(descripcionCategoria);
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                PreparedStatement pst = con.prepareStatement("UPDATE articulo SET nombre=?, stock=?, idCategoria=? WHERE id=?");
+                pst.setString(1, nombre);
+                pst.setInt(2, stock);
+                pst.setInt(3, idCategoria);
+                pst.setInt(4, id);
+
+                pst.close();
+                con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
     @Override
     protected String doInBackground(String... strings) {

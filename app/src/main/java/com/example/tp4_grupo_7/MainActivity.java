@@ -1,5 +1,6 @@
 package com.example.tp4_grupo_7;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private TextInputEditText editTextStock;
     private Spinner spinnerCategory;
     private Button buttonAdd;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,39 @@ public class MainActivity extends AppCompatActivity {
 
         DataCategoria data= new DataCategoria(spinnerCategory,this);
         data.getExecutor();
+
+        tabLayout = findViewById(R.id.tabLayout);
+        // Seleccionar la pestaña "Alta" (0)
+        tabLayout.getTabAt(0).select();
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        break;
+                    case 1:
+                        // Cambiar a la actividad de Modificación
+                        Intent modificarIntent = new Intent(MainActivity.this, MainActivity2.class);
+                        startActivity(modificarIntent);
+                        break;
+                    case 2:
+                        // Cambiar a la actividad de Listado
+                        Intent listarIntent = new Intent(MainActivity.this, ListadoActivity.class);
+                        startActivity(listarIntent);
+                        break;
+                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // No se necesita hacer nada aquí, pero se debe implementar el método
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // No se necesita hacer nada aquí, pero se debe implementar el método
+            }
+        });
 
 
         // Acción al hacer clic en el botón "Agregar"

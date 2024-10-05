@@ -95,7 +95,9 @@ public class DataCategoria extends AsyncTask<String, Void, String> {
         }
         return idCategoria;
     }
-
+    public ArrayList<Categoria> getListaCategorias() {
+        return listaCategorias;
+    }
     @Override
     protected String doInBackground(String... strings) {
         return "";
