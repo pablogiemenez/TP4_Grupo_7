@@ -13,15 +13,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.tabs.TabLayout;
-
 public class ListadoFragment extends Fragment {
-    private TabLayout tabLayout;
     private ListView lvArticulos;
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,@Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_listado, container, false);
 
         ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main), (v, insets) -> {
@@ -29,7 +26,8 @@ public class ListadoFragment extends Fragment {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        initVars(view);
+
+        lvArticulos = view.findViewById(R.id.lvArticulos);
 
         DataArticulo articulo = new DataArticulo(lvArticulos, getContext());
         articulo.getExecutor();
@@ -38,7 +36,5 @@ public class ListadoFragment extends Fragment {
     }
 
     public void initVars(View view){
-        tabLayout = view.findViewById(R.id.tabLayout);
-        lvArticulos = view.findViewById(R.id.lvArticulos);
     }
 }

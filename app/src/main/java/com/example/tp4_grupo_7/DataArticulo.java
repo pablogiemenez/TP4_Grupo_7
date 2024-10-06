@@ -63,6 +63,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
             try{
                 DataCategoria data=new DataCategoria();
                 int idCategoria=data.ObtenerIdCategoria(descripcionCategoria);
+
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
                 PreparedStatement pst = con.prepareStatement("insert into articulo(id,nombre,stock,idCategoria) values (?,?,?,?)");
@@ -70,6 +71,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                 pst.setString(2,nombre);
                 pst.setInt(3,stock);
                 pst.setInt(4,idCategoria);
+                pst.executeUpdate();
 
                 pst.close();
                 con.close();

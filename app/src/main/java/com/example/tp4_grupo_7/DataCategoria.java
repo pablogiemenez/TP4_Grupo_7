@@ -19,14 +19,14 @@ import java.util.concurrent.Future;
 public class DataCategoria extends AsyncTask<String, Void, String> {
     private Spinner sp_categoria;
     private Context context;
+
     private static ArrayList<Categoria> listaCategorias= new ArrayList<Categoria>();
     public DataCategoria(Spinner sp_categoria,Context context){
         this.sp_categoria=sp_categoria;
         this.context=context;
     }
-    public DataCategoria(){
+    public DataCategoria(){}
 
-    }
     ExecutorService executor = Executors.newSingleThreadExecutor();
     public void getExecutor() {
         executor.execute(() -> {
@@ -36,6 +36,8 @@ public class DataCategoria extends AsyncTask<String, Void, String> {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("SELECT * FROM categoria");
                 System.out.println("conexion completa");
+
+                listaCategorias.clear();
 
                 while(rs.next()){
                     Categoria categoria = new Categoria();
@@ -54,11 +56,12 @@ public class DataCategoria extends AsyncTask<String, Void, String> {
             new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
 
                 CategoriaAdapter adapter = new CategoriaAdapter(context, listaCategorias);
+
                 sp_categoria.setAdapter(adapter);
             });
         });
-
     }
+
     public int ObtenerIdCategoria(String descripcion){
         int idCategoria;
         Future<Integer> futureId=executor.submit(() -> {

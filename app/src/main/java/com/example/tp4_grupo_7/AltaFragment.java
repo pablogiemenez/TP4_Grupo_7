@@ -21,7 +21,6 @@ public class AltaFragment extends Fragment {
     private TextInputEditText editTextStock;
     private Spinner spinnerCategory;
     private Button buttonAdd;
-    private TabLayout tabLayout;
 
     @Nullable
     @Override
@@ -30,34 +29,33 @@ public class AltaFragment extends Fragment {
 
         initVars(view);
 
-        DataCategoria data= new DataCategoria(spinnerCategory,getContext());
+        DataCategoria data = new DataCategoria(spinnerCategory,getContext());
         data.getExecutor();
 
         // botón Agregar
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Obtener los datos de los campos de texto
-                String id = editTextID.getText().toString();
-                String productName = editTextProductName.getText().toString();
-                String stock = editTextStock.getText().toString();
-                String category = spinnerCategory.getSelectedItem().toString();
+        buttonAdd.setOnClickListener(v -> {
+            // Obtener los datos de los campos de texto
+            String id = editTextID.getText().toString();
+            String productName = editTextProductName.getText().toString();
+            String stock = editTextStock.getText().toString();
+            String category = spinnerCategory.getSelectedItem().toString();
 
-                // Validar que los campos no estén vacíos
-                if (id.isEmpty() || productName.isEmpty() || stock.isEmpty()) {
+            // Validar que los campos no estén vacíos
+            if (id.isEmpty() || productName.isEmpty() || stock.isEmpty()) {
 
-                    Toast.makeText(getContext(), "Por favor, completa todos los campos.", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Aquí puedes añadir la lógica para manejar el registro del producto
-                    DataArticulo data= new DataArticulo(getContext());
-                    data.InsertArticle(Integer.parseInt(id),productName,Integer.parseInt(stock),category);
-                    Toast.makeText(getContext(), "Producto agregado: " + productName+", "+id+ ", "+category+", "+stock, Toast.LENGTH_SHORT).show();
-                }
-                editTextID.setText("");
-                editTextStock.setText("");
-                editTextProductName.setText("");
-                spinnerCategory.setSelection(0);
+                Toast.makeText(getContext(), "Por favor, completa todos los campos.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Aquí puedes añadir la lógica para manejar el registro del producto
+                DataArticulo data1 = new DataArticulo(getContext());
+
+                data1.InsertArticle(Integer.parseInt(id), productName, Integer.parseInt(stock), category);
+                Toast.makeText(getContext(), "Producto agregado: " + productName + ", " + id + ", " + category + ", " + stock, Toast.LENGTH_SHORT).show();
             }
+
+            editTextID.setText("");
+            editTextStock.setText("");
+            editTextProductName.setText("");
+            spinnerCategory.setSelection(0);
         });
         // Inflar el layout de la actividad
         return view;
