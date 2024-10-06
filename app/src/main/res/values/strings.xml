@@ -6,4 +6,6 @@
     <string name="stock">STOCK</string>
     <string name="categoria">CATEGORIA</string>
     <string name="alta">ALTA</string>
+    <string name="MODIFICAR">MODIFICAR</string>
+    <string name="LISTADO">LISTADO</string>
 </resources>

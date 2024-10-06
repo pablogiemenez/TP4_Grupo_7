@@ -46,10 +46,10 @@ public class ArticuloAdapter extends ArrayAdapter<Articulo> {
             tvArticuloNombre.setText(articulo.getNombre());
         }
         if(tvArticuloStock != null){
-            tvArticuloStock.setText(articulo.getStock());
+            tvArticuloStock.setText("Stock: " + String.valueOf(articulo.getStock()));
         }
         if(tvArticuloIdCategoria != null){
-            tvArticuloIdCategoria.setText(articulo.getIdCat());
+            tvArticuloIdCategoria.setText("Categoria: " + String.valueOf(articulo.getIdCat()));
         }
 
         return v;

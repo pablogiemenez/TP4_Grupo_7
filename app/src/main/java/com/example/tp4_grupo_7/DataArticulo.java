@@ -55,6 +55,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
         });
         return executor;
     }
+
     public void InsertArticle(int id, String nombre,int stock,String descripcionCategoria){
 
         executor.execute(()->{
@@ -78,6 +79,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
 
         });
     }
+
     public void buscarArticulo(int id, OnArticuloFoundListener listener) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
