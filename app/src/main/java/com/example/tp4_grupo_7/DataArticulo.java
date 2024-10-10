@@ -10,8 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class DataArticulo extends AsyncTask<String, Void, String> {
     private ListView lvArticulos;
@@ -64,23 +66,93 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                 DataCategoria data=new DataCategoria();
                 int idCategoria=data.ObtenerIdCategoria(descripcionCategoria);
 
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
-                PreparedStatement pst = con.prepareStatement("insert into articulo(id,nombre,stock,idCategoria) values (?,?,?,?)");
-                pst.setInt(1,id);
-                pst.setString(2,nombre);
-                pst.setInt(3,stock);
-                pst.setInt(4,idCategoria);
-                pst.executeUpdate();
 
-                pst.close();
-                con.close();
+                if(Exist(id,nombre)){
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                    PreparedStatement pst = con.prepareStatement("insert into articulo(id,nombre,stock,idCategoria) values (?,?,?,?)");
+
+                    pst.setInt(1,id);
+                    pst.setString(2,nombre);
+                    pst.setInt(3,stock);
+                    pst.setInt(4,idCategoria);
+                    pst.executeUpdate();
+
+                    pst.close();
+                    con.close();
+                }
+
+
             }catch(Exception e){
                 e.printStackTrace();
             }
 
         });
     }
+    public boolean Exist(int id, String nombre){
+        Future<Boolean> exist= executor.submit(() -> {
+
+            try{
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("Select * FROM articulo");
+
+                while(rs.next()){
+                    Articulo articulo = new Articulo();
+                    articulo.setId(rs.getInt("id"));
+                    articulo.setNombre(rs.getString("nombre"));
+                    if(id==articulo.getId()||nombre.equals(articulo.getNombre())){
+                        return true;
+                    }
+
+                }
+                rs.close();
+            }
+            catch (Exception e){e.printStackTrace();}
+            return false;
+        });
+        try {
+            return exist.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean Exist(String nombre){
+        Future<Boolean> exist= executor.submit(() -> {
+
+            try{
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("Select * FROM articulo");
+
+                while(rs.next()){
+                    Articulo articulo = new Articulo();
+
+                    articulo.setNombre(rs.getString("nombre"));
+                    if(nombre.equals(articulo.getNombre())){
+                        return true;
+                    }
+
+                }
+                rs.close();
+            }
+            catch (Exception e){e.printStackTrace();}
+            return false;
+        });
+        try {
+            return exist.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public void buscarArticulo(int id, OnArticuloFoundListener listener) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -131,16 +203,19 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
             try {
                 DataCategoria data = new DataCategoria();
                 int idCategoria = data.ObtenerIdCategoria(descripcionCategoria);
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
-                PreparedStatement pst = con.prepareStatement("UPDATE articulo SET nombre=?, stock=?, idCategoria=? WHERE id=?");
-                pst.setString(1, nombre);
-                pst.setInt(2, stock);
-                pst.setInt(3, idCategoria);
-                pst.setInt(4, id);
+                if(Exist(nombre)){
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                    PreparedStatement pst = con.prepareStatement("UPDATE articulo SET nombre=?, stock=?, idCategoria=? WHERE id=?");
+                    pst.setString(1, nombre);
+                    pst.setInt(2, stock);
+                    pst.setInt(3, idCategoria);
+                    pst.setInt(4, id);
 
-                pst.close();
-                con.close();
+                    pst.close();
+                    con.close();
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
