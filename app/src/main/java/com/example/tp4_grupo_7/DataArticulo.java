@@ -67,7 +67,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                 int idCategoria=data.ObtenerIdCategoria(descripcionCategoria);
 
 
-                if(Exist(id,nombre)){
+                if(!Exist(id,nombre)){
                     Class.forName("com.mysql.jdbc.Driver");
                     Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
                     PreparedStatement pst = con.prepareStatement("insert into articulo(id,nombre,stock,idCategoria) values (?,?,?,?)");
@@ -203,7 +203,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
             try {
                 DataCategoria data = new DataCategoria();
                 int idCategoria = data.ObtenerIdCategoria(descripcionCategoria);
-                if(Exist(nombre)){
+                if(!Exist(nombre)){
                     Class.forName("com.mysql.jdbc.Driver");
                     Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
                     PreparedStatement pst = con.prepareStatement("UPDATE articulo SET nombre=?, stock=?, idCategoria=? WHERE id=?");
