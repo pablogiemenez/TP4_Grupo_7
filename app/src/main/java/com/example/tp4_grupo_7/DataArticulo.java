@@ -22,6 +22,11 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
     private static String result2;
     private static ArrayList<Articulo> listaArticulos = new ArrayList<Articulo>();
 
+    // Nueva configuración de conexión
+    private static final String URL = "jdbc:mysql://sql10.freesqldatabase.com:3306/sql10741357";
+    private static final String USER = "sql10741357";
+    private static final String PASSWORD = "vrVhL6AgjG";
+
     public DataArticulo(ListView lvArticulos, Context context) {
         this.lvArticulos = lvArticulos;
         this.context = context;
@@ -33,13 +38,13 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
     ExecutorService executor = Executors.newSingleThreadExecutor();
     public ExecutorService getExecutor() {
         executor.execute(() -> {
-            try{
+            try {
                 Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("Select * FROM articulo");
 
-                while(rs.next()){
+                while (rs.next()) {
                     Articulo articulo = new Articulo();
                     articulo.setId(rs.getInt("id"));
                     articulo.setNombre(rs.getString("nombre"));
@@ -48,8 +53,9 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                     listaArticulos.add(articulo);
                 }
                 rs.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch (Exception e){e.printStackTrace();}
             new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
                 ArticuloAdapter adapter = new ArticuloAdapter(context, listaArticulos);
                 lvArticulos.setAdapter(adapter);
@@ -58,108 +64,94 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
         return executor;
     }
 
-    public void InsertArticle(int id, String nombre,int stock,String descripcionCategoria){
+    public void InsertArticle(int id, String nombre, int stock, String descripcionCategoria) {
+        executor.execute(() -> {
+            try {
+                DataCategoria data = new DataCategoria();
+                int idCategoria = data.ObtenerIdCategoria(descripcionCategoria);
 
-        executor.execute(()->{
-
-            try{
-                DataCategoria data=new DataCategoria();
-                int idCategoria=data.ObtenerIdCategoria(descripcionCategoria);
-
-
-                if(!Exist(id,nombre)){
+                if (!Exist(id, nombre)) {
                     Class.forName("com.mysql.jdbc.Driver");
-                    Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
-                    PreparedStatement pst = con.prepareStatement("insert into articulo(id,nombre,stock,idCategoria) values (?,?,?,?)");
+                    Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+                    PreparedStatement pst = con.prepareStatement("insert into articulo(id, nombre, stock, idCategoria) values (?, ?, ?, ?)");
 
-                    pst.setInt(1,id);
-                    pst.setString(2,nombre);
-                    pst.setInt(3,stock);
-                    pst.setInt(4,idCategoria);
+                    pst.setInt(1, id);
+                    pst.setString(2, nombre);
+                    pst.setInt(3, stock);
+                    pst.setInt(4, idCategoria);
                     pst.executeUpdate();
 
                     pst.close();
                     con.close();
                 }
-
-
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
         });
     }
-    public boolean Exist(int id, String nombre){
-        Future<Boolean> exist= executor.submit(() -> {
 
-            try{
+    public boolean Exist(int id, String nombre) {
+        Future<Boolean> exist = executor.submit(() -> {
+            try {
                 Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("Select * FROM articulo");
 
-                while(rs.next()){
+                while (rs.next()) {
                     Articulo articulo = new Articulo();
                     articulo.setId(rs.getInt("id"));
                     articulo.setNombre(rs.getString("nombre"));
-                    if(id==articulo.getId()||nombre.equals(articulo.getNombre())){
+                    if (id == articulo.getId() || nombre.equals(articulo.getNombre())) {
                         return true;
                     }
-
                 }
                 rs.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch (Exception e){e.printStackTrace();}
             return false;
         });
         try {
             return exist.get();
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public boolean Exist(String nombre){
-        Future<Boolean> exist= executor.submit(() -> {
-
-            try{
+    public boolean Exist(String nombre) {
+        Future<Boolean> exist = executor.submit(() -> {
+            try {
                 Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery("Select * FROM articulo");
 
-                while(rs.next()){
+                while (rs.next()) {
                     Articulo articulo = new Articulo();
-
                     articulo.setNombre(rs.getString("nombre"));
-                    if(nombre.equals(articulo.getNombre())){
+                    if (nombre.equals(articulo.getNombre())) {
                         return true;
                     }
-
                 }
                 rs.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch (Exception e){e.printStackTrace();}
             return false;
         });
         try {
             return exist.get();
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-
     public void buscarArticulo(int id, OnArticuloFoundListener listener) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
+                Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement pst = con.prepareStatement("SELECT * FROM articulo WHERE id = ?");
                 pst.setInt(1, id);
                 ResultSet rs = pst.executeQuery();
@@ -177,7 +169,6 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                 pst.close();
                 con.close();
 
-                // Notificar el resultado en el hilo principal
                 final Articulo finalArticulo = articulo;
                 new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
                     if (finalArticulo != null) {
@@ -203,19 +194,19 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
             try {
                 DataCategoria data = new DataCategoria();
                 int idCategoria = data.ObtenerIdCategoria(descripcionCategoria);
-                if(!Exist(nombre)){
+                if (!Exist(nombre)) {
                     Class.forName("com.mysql.jdbc.Driver");
-                    Connection con = DriverManager.getConnection("jdbc:mysql://sql10.freesqldatabase.com/sql10734808", "sql10734808", "aWgDljDA2v");
-                    PreparedStatement pst = con.prepareStatement("UPDATE articulo SET nombre=?, stock=?, idCategoria=? WHERE id=?");
+                    Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+                    PreparedStatement pst = con.prepareStatement("UPDATE articulo SET nombre = ?, stock = ?, idCategoria = ? WHERE id = ?");
                     pst.setString(1, nombre);
                     pst.setInt(2, stock);
                     pst.setInt(3, idCategoria);
                     pst.setInt(4, id);
 
+                    pst.executeUpdate();
                     pst.close();
                     con.close();
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
