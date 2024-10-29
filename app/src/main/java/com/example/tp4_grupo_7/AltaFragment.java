@@ -49,6 +49,7 @@ public class AltaFragment extends Fragment {
                 DataArticulo data1 = new DataArticulo(getContext());
 
                 data1.InsertArticle(Integer.parseInt(id), productName, Integer.parseInt(stock), category);
+
                 Toast.makeText(getContext(), "Producto agregado: " + productName + ", " + id + ", " + category + ", " + stock, Toast.LENGTH_SHORT).show();
             }
 

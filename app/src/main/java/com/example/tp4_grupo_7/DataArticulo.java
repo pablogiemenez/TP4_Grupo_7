@@ -43,6 +43,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
                 Statement st = con.createStatement();
+                listaArticulos.clear();
                 ResultSet rs = st.executeQuery("Select * FROM articulo");
 
                 while (rs.next()) {
@@ -69,9 +70,11 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
         executor.execute(() -> {
             try {
                 DataCategoria data = new DataCategoria();
+
                 int idCategoria = data.ObtenerIdCategoria(descripcionCategoria);
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+                con.setAutoCommit(false);
                 PreparedStatement stExist= con.prepareStatement("SELECT COUNT(*) FROM articulo WHERE id=? and nombre=?");
                 stExist.setInt(1,id);
                 stExist.setString(2,nombre);
@@ -93,17 +96,20 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                     pst.setInt(3, stock);
                     pst.setInt(4, idCategoria);
                     pst.executeUpdate();
-
+                    con.commit();
                     pst.close();
 
                 }
+                con.setAutoCommit(true);
                 con.close();
+
             } catch (Exception e) {
                 e.printStackTrace();
                 
             }
 
         });
+
     }
 
     public boolean Exist(int id, String nombre) {
