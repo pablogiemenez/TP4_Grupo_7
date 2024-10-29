@@ -75,7 +75,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
                 con.setAutoCommit(false);
-                PreparedStatement stExist= con.prepareStatement("SELECT COUNT(*) FROM articulo WHERE id=? and nombre=?");
+                PreparedStatement stExist= con.prepareStatement("SELECT COUNT(*) FROM articulo WHERE id=? or nombre=?");
                 stExist.setInt(1,id);
                 stExist.setString(2,nombre);
                 ResultSet rs = stExist.executeQuery();
@@ -87,8 +87,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                 rs.close();
                 stExist.close();
                 if (!exist) {
-                    /*Class.forName("com.mysql.jdbc.Driver");
-                    Connection con = DriverManager.getConnection(URL, USER, PASSWORD);*/
+
                     PreparedStatement pst = con.prepareStatement("insert into articulo(id, nombre, stock, idCategoria) values (?, ?, ?, ?)");
 
                     pst.setInt(1, id);
@@ -217,10 +216,24 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
         executor.execute(() -> {
             try {
                 DataCategoria data = new DataCategoria();
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+
+                con.setAutoCommit(false);
+                PreparedStatement stExist= con.prepareStatement("SELECT COUNT(*) FROM articulo WHERE id!=? and nombre=?");
+                stExist.setInt(1,id);
+                stExist.setString(2,nombre);
+                ResultSet rs = stExist.executeQuery();
+
+                boolean exist=false;
+                if(rs.next()){
+                    exist=rs.getInt(1)>0;
+                }
+                rs.close();
+                stExist.close();
                 int idCategoria = data.ObtenerIdCategoria(descripcionCategoria);
-                if (!Exist(nombre)) {
-                    Class.forName("com.mysql.jdbc.Driver");
-                    Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+                if (!exist) {
+
                     PreparedStatement pst = con.prepareStatement("UPDATE articulo SET nombre = ?, stock = ?, idCategoria = ? WHERE id = ?");
                     pst.setString(1, nombre);
                     pst.setInt(2, stock);
@@ -228,9 +241,12 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                     pst.setInt(4, id);
 
                     pst.executeUpdate();
+                    con.commit();
                     pst.close();
-                    con.close();
+
                 }
+                con.setAutoCommit(true);
+                con.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
