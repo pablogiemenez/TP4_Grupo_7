@@ -3,6 +3,7 @@ package com.example.tp4_grupo_7;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -69,10 +70,22 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
             try {
                 DataCategoria data = new DataCategoria();
                 int idCategoria = data.ObtenerIdCategoria(descripcionCategoria);
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement stExist= con.prepareStatement("SELECT COUNT(*) FROM articulo WHERE id=? and nombre=?");
+                stExist.setInt(1,id);
+                stExist.setString(2,nombre);
+                ResultSet rs = stExist.executeQuery();
 
-                if (!Exist(id, nombre)) {
-                    Class.forName("com.mysql.jdbc.Driver");
-                    Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+                boolean exist=false;
+                if(rs.next()){
+                    exist=rs.getInt(1)>0;
+                }
+                rs.close();
+                stExist.close();
+                if (!exist) {
+                    /*Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = DriverManager.getConnection(URL, USER, PASSWORD);*/
                     PreparedStatement pst = con.prepareStatement("insert into articulo(id, nombre, stock, idCategoria) values (?, ?, ?, ?)");
 
                     pst.setInt(1, id);
@@ -82,11 +95,14 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                     pst.executeUpdate();
 
                     pst.close();
-                    con.close();
+
                 }
+                con.close();
             } catch (Exception e) {
                 e.printStackTrace();
+                
             }
+
         });
     }
 
@@ -107,6 +123,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                     }
                 }
                 rs.close();
+                con.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -135,6 +152,7 @@ public class DataArticulo extends AsyncTask<String, Void, String> {
                     }
                 }
                 rs.close();
+                con.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
